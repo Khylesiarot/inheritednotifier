@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
           return Column(
             children: [
               Slider(
-                  value: 0.0,
+                  value: SliderInheritedNotifier.of(context),
                   onChanged: (value) {
                     sliderData.value = value;
                   }),
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ].expandEqually().toList(),
-              )
+              ),
             ],
           );
         }),
