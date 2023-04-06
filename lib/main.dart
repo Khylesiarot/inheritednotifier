@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(MaterialApp(
     title: 'Flutter Demo',
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
@@ -28,12 +29,13 @@ class SliderInheritedNotifier extends InheritedNotifier<SliderData> {
       {Key? key, required SliderData sliderData, required Widget child})
       : super(key: key, notifier: sliderData, child: child);
 
-   static double of(BuildContext context){
-    return context.dependOnInheritedWidgetOfExactType<SliderInheritedNotifier>()
-    ?.notifier
-    ?.value ??
-    0.0;
-   }   
+  static double of(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<SliderInheritedNotifier>()
+            ?.notifier
+            ?.value ??
+        0.0;
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -47,27 +49,42 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Page')),
+      appBar: AppBar(
+        title: const Text('Home Page'),
+        centerTitle: true,
+      ),
       body: SliderInheritedNotifier(
         sliderData: sliderData,
-        child: Column(
-          children: [
-            Slider(value: 0, onChanged: (value) {}),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  color: Colors.yellow,
-                  height: 200,
-                ),
-                Container(
-                  color: Colors.blue,
-                  height: 200,
-                ),
-              ].expandEqually().toList(),
-            )
-          ],
-        ),
+        child: Builder(builder: (context) {
+          return Column(
+            children: [
+              Slider(
+                  value: 0.0,
+                  onChanged: (value) {
+                    sliderData.value = value;
+                  }),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Opacity(
+                    opacity: SliderInheritedNotifier.of(context),
+                    child: Container(
+                      color: Colors.yellow,
+                      height: 200,
+                    ),
+                  ),
+                  Opacity(
+                    opacity: SliderInheritedNotifier.of(context),
+                    child: Container(
+                      color: Colors.blue,
+                      height: 200,
+                    ),
+                  ),
+                ].expandEqually().toList(),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
